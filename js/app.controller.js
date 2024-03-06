@@ -70,15 +70,33 @@ function renderLocs(locs) {
 
 function onRemoveLoc(locId) {
     locService.remove(locId)
-        .then(() => {
-            flashMsg('Location removed')
-            unDisplayLoc()
-            loadAndRenderLocs()
+
+    Swal.fire({
+        title: 'Are you sure?',
+        text: "You won't be able to revert this!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#21379b',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, delete it!'
+    })
+        .then((result) => {
+            if (result.isConfirmed) {
+                Swal.fire(
+                    'Deleted!',
+                    'Your file has been deleted.',
+                    'success'
+                )
+                    .then(() => {
+                        locService.remove(locId)
+                        unDisplayLoc()
+                        loadAndRenderLocs()
+                
+                    })
+            }
         })
-        .catch(err => {
-            console.error('OOPs:', err)
-            flashMsg('Cannot remove location')
-        })
+
+
 }
 
 function onSearchAddress(ev) {
