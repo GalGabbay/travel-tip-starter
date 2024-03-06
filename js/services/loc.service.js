@@ -36,6 +36,7 @@ export const locService = {
 function query() {
     return storageService.query(DB_KEY)
         .then(locs => {
+            // console.log('locs', locs)
             if (gFilterBy.txt) {
                 const regex = new RegExp(gFilterBy.txt, 'i')
                 locs = locs.filter(loc => regex.test(loc.name))
@@ -52,8 +53,12 @@ function query() {
 
             if (gSortBy.rate !== undefined) {
                 locs.sort((p1, p2) => (p1.rate - p2.rate) * gSortBy.rate)
+          
             } else if (gSortBy.name !== undefined) {
-                locs.sort((p1, p2) => p1.name.localeCompare(p2.name) * gSortBy.name)
+                 locs.sort((p1, p2) => p1.name.localeCompare(p2.name) * gSortBy.name)
+                 
+            } else if (gSortBy.createdAt !== undefined) {
+                locs.sort((p1, p2) => (p1.createdAt - p2.createdAt) * gSortBy.createdAt)
             }
 
             return locs
@@ -100,6 +105,7 @@ function getLocCountByRateMap() {
 
 function setSortBy(sortBy = {}) {
     gSortBy = sortBy
+    console.log('gSortBy', gSortBy)
 }
 
 function _createLocs() {
