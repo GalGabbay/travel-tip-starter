@@ -18,8 +18,9 @@ import { storageService } from './async-storage.service.js'
 const PAGE_SIZE = 5
 const DB_KEY = 'locs'
 var gSortBy = { rate: -1 }
-var gFilterBy = { txt: '', minRate: 0 }
+var gFilterBy = { txt: '', x: '', minRate: 0 }
 var gPageIdx
+
 
 _createLocs()
 
@@ -33,14 +34,45 @@ export const locService = {
     getLocCountByRateMap
 }
 
+
+
 function query() {
     return storageService.query(DB_KEY)
         .then(locs => {
-            // console.log('locs', locs)
-            if (gFilterBy.txt) {
-                const regex = new RegExp(gFilterBy.txt, 'i')
-                locs = locs.filter(loc => regex.test(loc.name))
+
+
+
+            // if (gFilterBy.txt) {
+
+            //     const regex = new RegExp(gFilterBy.txt, 'i')
+
+            //     locs = locs.filter(loc =>
+            //         regex.test(loc.name)
+            //     )
+            // }
+
+
+
+            if (gFilterBy.x) {
+                const regex = new RegExp(gFilterBy.x, 'i')
+
+                locs = locs.filter(loc =>
+                    regex.test(loc.geo.address)
+                )
             }
+
+
+
+
+
+
+
+
+
+
+
+
+
             if (gFilterBy.minRate) {
                 locs = locs.filter(loc => loc.rate >= gFilterBy.minRate)
             }
@@ -53,16 +85,18 @@ function query() {
 
             if (gSortBy.rate !== undefined) {
                 locs.sort((p1, p2) => (p1.rate - p2.rate) * gSortBy.rate)
-          
+
             } else if (gSortBy.name !== undefined) {
-                 locs.sort((p1, p2) => p1.name.localeCompare(p2.name) * gSortBy.name)
-                 
+                locs.sort((p1, p2) => p1.name.localeCompare(p2.name) * gSortBy.name)
+
             } else if (gSortBy.createdAt !== undefined) {
                 locs.sort((p1, p2) => (p1.createdAt - p2.createdAt) * gSortBy.createdAt)
             }
 
             return locs
         })
+    console.log("🚀 ~ query ~  elLocList.innerHTML:", elLocList.innerHTML)
+    console.log("🚀 ~ query ~ elLocList.innerHTML:", elLocList.innerHTML)
 }
 
 function getById(locId) {
@@ -84,10 +118,14 @@ function save(loc) {
 }
 
 function setFilterBy(filterBy = {}) {
+
     if (filterBy.txt !== undefined) gFilterBy.txt = filterBy.txt
     if (filterBy.minRate !== undefined && !isNaN(filterBy.minRate)) gFilterBy.minRate = filterBy.minRate
+    if (filterBy.x !== undefined) gFilterBy.x = filterBy.x
+
     return gFilterBy
 }
+
 
 function getLocCountByRateMap() {
     return storageService.query(DB_KEY)
@@ -105,7 +143,7 @@ function getLocCountByRateMap() {
 
 function setSortBy(sortBy = {}) {
     gSortBy = sortBy
-    console.log('gSortBy', gSortBy)
+
 }
 
 function _createLocs() {

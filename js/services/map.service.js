@@ -29,7 +29,7 @@ function panTo({lat, lng, zoom=15}) {
     gMap.panTo(laLatLng)
     gMap.setZoom(zoom)
 }
-console.log('gMap', gMap)
+
 function lookupAddressGeo(geoOrAddress) {
     // Sample URLs:
     // const url = `https://maps.googleapis.com/maps/api/geocode/json?address=${address}`
