@@ -18,6 +18,8 @@ window.app = {
     onSetFilterBy,
 }
 
+console.log('hello')
+
 function onInit() {
     loadAndRenderLocs()
 
